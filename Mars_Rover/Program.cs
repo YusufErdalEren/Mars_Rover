@@ -14,7 +14,7 @@ namespace Mars_Rover
             int currentXCoordinate = 0, currentYCoordinate = 0, plateauAreaXCoordinate, plateauAreaYCoordinate; 
             string plateauAreaCoordinate = string.Empty, currentLocationAndFacing = string.Empty, instantFacing = string.Empty, movementCommands = string.Empty;
 
-            Console.WriteLine("Please enter the upper-right coordinates..\n");
+            Console.WriteLine("Please enter the upper-right coordinates..");
             plateauAreaCoordinate = Console.ReadLine().Replace(" ", "");
             plateauAreaXCoordinate = int.Parse(plateauAreaCoordinate[0].ToString());
             plateauAreaYCoordinate = int.Parse(plateauAreaCoordinate[1].ToString());
@@ -28,17 +28,18 @@ namespace Mars_Rover
                 CurrentXCoordinate = currentXCoordinate,
                 CurrentYCoordinate = currentYCoordinate,
                 InstantFacing = instantFacing,
-                MovementCommands = movementCommands
+                MovementCommands = movementCommands,
+                PlateauAreaCoordinate = plateauArea
             };
-            var lastLocation = GetLocation(request);
+            var lastLocation = GetCurrentLocation(request);
 
-            Console.WriteLine($"{lastLocation.Item1} {lastLocation.Item2} {lastLocation.Item3} \n\n");
+            Console.WriteLine($"\nOutput: {lastLocation.Item1} {lastLocation.Item2} {lastLocation.Item3}\n");
             goto Start_Again;
         }
 
-        private static Tuple<int, int, string> GetLocation(GetLocationRequest model)
+        private static Tuple<int, int, string> GetCurrentLocation(GetLocationRequest model)
         {
-            Console.WriteLine("Please enter current location and facing:\n");
+            Console.WriteLine("\nPlease enter current location and facing..");
             model.CurrentLocationAndFacing = Console.ReadLine().Replace(" ", "");
 
             model.CurrentXCoordinate = int.Parse(model.CurrentLocationAndFacing[0].ToString());
@@ -47,54 +48,61 @@ namespace Mars_Rover
 
             var currentLocation = Tuple.Create(model.CurrentXCoordinate, model.CurrentYCoordinate, model.InstantFacing);
 
-            Console.WriteLine("Please enter movement commands..\n");
+            Console.WriteLine("\nPlease enter movement commands..");
             model.MovementCommands = Console.ReadLine().Replace(" ", "");
 
             foreach (var character in model.MovementCommands)
             {
-                if (character != 'M')
+                currentLocation = SetCurrentLocation(character, currentLocation);
+            }
+            return currentLocation;
+        }
+
+        private static Tuple<int, int, string> SetCurrentLocation(char character, Tuple<int, int, string> currentLocation)
+        {
+            if (character != 'M')
+            {
+                if (currentLocation.Item3 == "N")
                 {
-                    if (currentLocation.Item3 == "N")
-                    {
-                        if (character == 'L')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "W");
-                        if (character == 'R')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "E");
-                    }
-                    else if (currentLocation.Item3 == "S")
-                    {
-                        if (character == 'L')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "E");
-                        if (character == 'R')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "W");
-                    }
-                    else if (currentLocation.Item3 == "E")
-                    {
-                        if (character == 'L')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "N");
-                        if (character == 'R')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "S");
-                    }
-                    else if (currentLocation.Item3 == "W")
-                    {
-                        if (character == 'L')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "S");
-                        if (character == 'R')
-                            currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "N");
-                    }
+                    if (character == 'L')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "W");
+                    if (character == 'R')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "E");
                 }
-                else
+                else if (currentLocation.Item3 == "S")
                 {
-                    if (currentLocation.Item3 == "N")
-                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2 + 1, currentLocation.Item3);
-                    if (currentLocation.Item3 == "S")
-                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2 - 1, currentLocation.Item3);
-                    if (currentLocation.Item3 == "E")
-                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1 + 1, currentLocation.Item2, currentLocation.Item3);
-                    if (currentLocation.Item3 == "W")
-                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1 - 1, currentLocation.Item2, currentLocation.Item3); ;
+                    if (character == 'L')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "E");
+                    if (character == 'R')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "W");
+                }
+                else if (currentLocation.Item3 == "E")
+                {
+                    if (character == 'L')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "N");
+                    if (character == 'R')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "S");
+                }
+                else if (currentLocation.Item3 == "W")
+                {
+                    if (character == 'L')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "S");
+                    if (character == 'R')
+                        currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2, "N");
                 }
             }
+            else
+            {
+                if (currentLocation.Item3 == "N")
+                    currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2 + 1, currentLocation.Item3);
+                if (currentLocation.Item3 == "S")
+                    currentLocation = new Tuple<int, int, string>(currentLocation.Item1, currentLocation.Item2 - 1, currentLocation.Item3);
+                if (currentLocation.Item3 == "E")
+                    currentLocation = new Tuple<int, int, string>(currentLocation.Item1 + 1, currentLocation.Item2, currentLocation.Item3);
+                if (currentLocation.Item3 == "W")
+                    currentLocation = new Tuple<int, int, string>(currentLocation.Item1 - 1, currentLocation.Item2, currentLocation.Item3); ;
+            }
+
             return currentLocation;
         }
     }

@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Mars_Rover.Models.SubClasses
 {
-    public class GetLocationRequest : IRequestBase
+    public class GetLocationRequest : RequestBase
     {
         public string CurrentLocationAndFacing { get; set; }
         public int CurrentXCoordinate { get; set; }
         public int CurrentYCoordinate { get; set; }
         public string InstantFacing { get; set; }
         public string MovementCommands { get; set; }
+        public Tuple<int, int> PlateauAreaCoordinate { get; set; }
     }
 }

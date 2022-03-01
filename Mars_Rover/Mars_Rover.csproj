@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BaseClasses\IRequestBase.cs" />
+    <Compile Include="Models\BaseClasses\RequestBase.cs" />
     <Compile Include="Models\SubClasses\GetLocationRequest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
